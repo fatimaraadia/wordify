@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number to Words Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            color: white;
+            background-color: #23153C;            ;
+            transition: all 0.3s ease-in-out;
+        }
+        input, select, button {
+            margin: 10px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+        }
+        button {
+            background-color: #ff3f81;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: scale(1.1);
+        }
+        #output {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            animation: fadeIn 1s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        nav {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 12px;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js"></script>
+</head>
+<body>
+    <nav>
+        <a href="contact.html">Contact Us</a>
+    </nav>
+    <h1>Number to Words Converter</h1>
+    <select id="currency">
+        <option value="USD">USD</option>
+        <option value="BDT">BDT</option>
+        <option value="EUR">EUR</option>
+        <option value="INR">INR</option>
+        <option value="GBP">GBP</option>
+    </select>
+    <input type="number" id="number" placeholder="Enter amount">
+    <button onclick="convertNumber()">Convert</button>
+    <p id="output"></p>
+    
+    <script>
+        function convertNumber() {
+            const currency = document.getElementById("currency").value;
+            const number = parseInt(document.getElementById("number").value);
+            if (isNaN(number)) {
+                document.getElementById("output").innerText = "Please enter a valid number.";
+                return;
+            }
+            let words;
+            if (currency === "USD" || currency === "EUR" || currency === "GBP") {
+                words = numberToWordsUSD(number);
+            } else if (currency === "BDT" || currency === "INR") {
+                words = numberToWordsBDT(number);
+            }
+            document.getElementById("output").innerText = words;
+        }
+
+        function numberToWordsUSD(num) {
+            return new Intl.NumberFormat('en-US', { style: 'decimal' }).format(num).replace(/,/g, ' ');
+        }
+
+        function numberToWordsBDT(num) {
+            let crore = Math.floor(num / 10000000);
+            num %= 10000000;
+            let lakh = Math.floor(num / 100000);
+            num %= 100000;
+            let thousand = Math.floor(num / 1000);
+            num %= 1000;
+            let hundred = Math.floor(num / 100);
+            num %= 100;
+            let rest = num;
+            
+            let words = [];
+            if (crore) words.push(crore + ' crore');
+            if (lakh) words.push(lakh + ' lakh');
+            if (thousand) words.push(thousand + ' thousand');
+            if (hundred) words.push(hundred + ' hundred');
+            if (rest) words.push(rest);
+            
+            return words.join(', ');
+        }
+
+        var setVanta = ()=>{
+            if (window.VANTA) window.VANTA.GLOBE({
+                el: "body",
+                mouseControls: true,
+                touchControls: true,
+                gyroControls: false,
+                minHeight: 600.00,
+                minWidth: 200.00,
+                scale: 1.00,
+                scaleMobile: 1.00,
+                size: 0.60
+            });
+        }
+        setVanta();
+    </script>
+</body>
+</html>
